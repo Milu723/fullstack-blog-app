@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-// Accept the onPostCreated function as a prop
-function CreatePost({ onPostCreated }) {
+// Accept the API_BASE_URL and onPostCreated function as props
+function CreatePost({ onPostCreated, API_BASE_URL }) {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [author, setAuthor] = useState('');
@@ -16,24 +16,23 @@ function CreatePost({ onPostCreated }) {
             author: author
         };
 
-        axios.post('http://localhost:5000/api/posts/add', newPost)
+        // Use the live API URL to create a post
+        axios.post(`${API_BASE_URL}/api/posts/add`, newPost)
             .then(res => {
                 console.log(res.data);
-                // Call the function from the parent to re-fetch posts
                 onPostCreated(); 
             })
             .catch(error => {
                 console.log('There was an error creating the post:', error);
             });
 
-        // Clear the form fields
         setTitle('');
         setContent('');
         setAuthor('');
     };
 
     return (
-        <div className="create-post-form">
+        <div className="card">
             <h2>Create a New Post</h2>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">

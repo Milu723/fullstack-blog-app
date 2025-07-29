@@ -4,15 +4,17 @@ import CreatePost from './components/CreatePost';
 import PostsList from './components/PostsList';
 import './App.css';
 
+// !! IMPORTANT !!
+// Replace this with your actual live back-end URL from Render
+const API_BASE_URL = 'https://my-blog-api-3wsg.onrender.com'; // Use YOUR Render URL
+
 function App() {
-  // State for posts is now in the parent component
   const [posts, setPosts] = useState([]);
 
-  // Function to fetch posts from the API
   const fetchPosts = () => {
-    axios.get('http://localhost:5000/api/posts/')
+    // Use the live API URL
+    axios.get(`${API_BASE_URL}/api/posts/`)
       .then(response => {
-        // Sort posts by creation date, newest first
         const sortedPosts = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setPosts(sortedPosts);
       })
@@ -21,10 +23,9 @@ function App() {
       });
   };
 
-  // useEffect to fetch posts when the component mounts
   useEffect(() => {
     fetchPosts();
-  }, []); // Runs only once on mount
+  }, []);
 
   return (
     <div className="container">
@@ -33,10 +34,7 @@ function App() {
       </header>
       
       <main>
-        {/* Pass the fetchPosts function down to CreatePost */}
-        <CreatePost onPostCreated={fetchPosts} />
-        
-        {/* Pass the posts array down to PostsList */}
+        <CreatePost onPostCreated={fetchPosts} API_BASE_URL={API_BASE_URL} />
         <PostsList posts={posts} />
       </main>
     </div>
